@@ -1,0 +1,51 @@
+<h1>mochageek</h1>
+<h3>一覧ページ</h3>
+<%= link_to "新規投稿へ", new_coffee_path %>
+
+<div class="coffees-container">
+
+  <% if user_signed_in? %>
+    <%= link_to "マイページへ", user_path(current_user.id) %>
+  <% end %>
+
+  <h3>投稿を検索</h3>
+    <%= form_tag({controller:"coffees",action:"index"}, method: :get) do %>
+    <%= text_field_tag :search %>
+    <%= submit_tag '検索する'  %>
+  <% end %>
+
+  <% @coffees.each do |t| %>
+    <div class="coffee">
+    <%= image_tag t.image_url, size: "250x200" if t.image? %>
+      <%= t.name %>
+      <%= t.area %>
+      <%= t.image %>
+
+      <% if user_signed_in? %>
+      <% if current_user.already_liked?(t) %>
+          <%= button_to coffee_like_path(id: t.id, coffee_id: t.id), method: :delete do %>
+              <p>いいねを取り消す</p><%= t.likes.count %>
+          <% end %>
+      <% else %>
+          <%= button_to coffee_likes_path(id: t.id, coffee_id: t.id), method: :post do %>
+              <p>いいね</p><%= t.likes.count %>
+          <% end %>
+      <% end %>
+  <% else %>
+      <p>いいねの数 = </p><%= t.likes.count %>
+  <% end %>
+
+      <%= link_to "詳細へ", coffee_path(t.id) %>
+      <%= link_to "編集する", edit_coffee_path(t.id) %>
+      <%= link_to "削除する", coffee_path(t.id), method: :delete %>
+      <br>
+      <br>
+      <p>マイページへ</p>
+      <%= link_to t.user.name, user_path(t.user.id) %>
+      <%= t.user.email %>
+    </div>
+  <% end %>
+
+      
+
+</div>

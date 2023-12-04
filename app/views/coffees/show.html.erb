@@ -1,0 +1,53 @@
+<h1>mochageek</h1>
+<h3>投稿カフェ詳細</h3>
+
+<div class="coffee">
+  <p><%= @coffee.body %></p>
+  <p><%= @coffee.created_at %></p>
+  <%= link_to "編集する", edit_coffee_path(@coffee.id) %>
+    <% if user_signed_in? %>
+      <% if current_user.already_liked?(@coffee) %>
+        <%= button_to coffee_like_path(@coffee), method: :delete do %>
+          <p>いいねを取り消す</p><%= @coffee.likes.count %>
+        <% end %>
+      <% else %>
+        <%= button_to coffee_likes_path(@coffee), method: :post do %>
+          <p>いいね</p><%= @coffee.likes.count %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <p>いいねの数 = </p><%= @coffee.likes.count %>
+    <% end %>
+</div>
+
+<br>
+
+<h2>いいねしたユーザー</h2>
+<% @coffee.liked_users.each do |user| %>
+  <li><%= user.email %></li>
+<% end %>
+
+<div class="comment-wrapper">
+  <h2>コメント一覧</h2>
+  <% @comments.each do |c| %>
+    <div>
+      <%= c.user.email unless c.user.blank? %>
+      <br>
+      <%= c.content %>
+    </div>
+      <br>
+  <% end %>
+
+  <% if user_signed_in? %>
+    <%= form_with(model: [@coffee, @comment], local: true) do |f| %>
+      <%= f.text_area :content %>
+      <%= button_tag type: "submit" do %>
+        <i class="far fa-comments"></i> コメントする
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<%= link_to "カフェ一覧に戻る", coffees_path %>
+
+<%= link_to "編集する", edit_coffee_path(@coffee.id) %>

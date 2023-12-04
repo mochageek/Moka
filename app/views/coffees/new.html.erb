@@ -1,0 +1,30 @@
+<h1>(カフェ投稿ページ)</h1>
+<h3>新規投稿ページ</h3>
+<%= form_for @coffee do |f| %>
+
+# データ型がstringで自由記述の入力フォーム
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name, :size => 30 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :area %>
+    <%= f.text_field :area, :size => 30 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :image %>
+    <%= f.file_field :image, :size => 30 %>
+  </div>
+
+ # データ型がtextで自由記述の入力フォーム
+ <div class="field">
+ <%= f.label :body  %>
+ <%= f.text_area :body, :size => "30x2" %>
+</div>
+
+  <%= f.submit "投稿する" %>
+<% end %>
+
+<%= link_to "一覧に戻る", coffees_path %>
