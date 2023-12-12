@@ -2,15 +2,13 @@ class CoffeesController < ApplicationController
     before_action :authenticate_user!, only: [:new, :create]
     
     def index
-      if params[:search] == nil
-        @coffees= Coffee.all
-      elsif params[:search] == ''
-        @coffees= Coffee.all
-      else
-        #部分検索
-        @coffees = Coffee.where("body LIKE ? ",'%' + params[:search] + '%')
-      end
+      @coffees = Coffee.all
+      search = params[:search]
       @coffees = @coffees.page(params[:page]).per(2)
+      @coffees = @coffees.joins(:user).where("shop LIKE ? OR area LIKE ? OR body LIKE ?", "%#{search}%", "%#{search}%", "%#{search}%") if search.present?
+      if params[:tag]
+        Tag.create(name: params[:tag])
+      end
     end
 
     def new
@@ -52,8 +50,31 @@ class CoffeesController < ApplicationController
         redirect_to action: :index
     end
 
+    def tagall
+
+        @coffees = Coffee.all
+        search = params[:search]
+        @coffees = @coffees.joins(:user).where("shop LIKE ? OR area LIKE ? OR body LIKE ?", "%#{search}%", "%#{search}%", "%#{search}%") if search.present?
+        if params[:tag]
+         Tag.create(name: params[:tag])
+        end
+
+        if params[:tag_ids]
+          @coffees = []
+          params[:tag_ids].each do |key, value|
+            if value == "1"
+              tag_coffees = Tag.find_by(name: key).coffees
+              @coffees = @coffees.empty? ? tag_coffees : @coffees & tag_coffees
+            end
+          end
+        end
+
+    end
+
+
     private
     def coffee_params
-    params.require(:coffee).permit(:name, :area, :image, :body)
+      params.require(:coffee).permit(:shop, :area, :image, :body, :lat, :lng, tag_ids: [])
     end
+    
 end

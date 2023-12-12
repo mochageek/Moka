@@ -1,15 +1,25 @@
 <%= form_for @coffee do |f| %>
-    <%= f.label :name %>
-    <%= f.text_field :name, :size => 70 %>
+
+    <%= f.label :shop %>
+    <%= f.text_field :shop, :size => 70 %>
+    
     <br>
+    
     <%= f.label :area %>
     <%= f.text_field :area, :size => 70 %>
+    
     <br>
+    
     <%= f.label :image %>
     <%= f.text_field :image, :size => 70 %>
+    
     <br>
+    
     <%= f.label :body %>
+    
     <br>
+    
     <%= f.text_area :body, :size => "30x2" %> 
     <%= f.submit "内容を変更する" %>
+
 <% end %>

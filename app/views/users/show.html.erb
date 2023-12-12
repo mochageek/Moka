@@ -1,16 +1,31 @@
-<h1>ユーザー情報</h1>
-<p>名前 : <%= @user.name %></p>
-<p>メールアドレス : <%= @user.email %></p>
-<p>プロフィール : <%= @user.profile %></p>
+<h3>登録されているユーザー情報</h3>
+<p>NAME : <%= @user.name %></p>
+<p>EMAIL: <%= @user.email %></p>
+<p>PROFILE <br> <%= @user.profile %></p>
 
 <% if current_user.id == @user.id %>
   <%= link_to "編集する", edit_user_registration_path %>
 <% end %>
 
-<h3>ユーザーの投稿一覧</h3>
+<br>
+<br>
+
+<h3>いいねしたカフェ</h3>
+<h5>もっと見る＞</h5>
+
+<br>
+
+<h3>投稿したカフェ</h3>
+<h5>もっと見る＞</h5>
 <% @user.coffees.each do |t| %>
+  <br>
   <%= t.user.name %>
+  <%= t.shop %>
+  <%= t.area %>
   <%= t.body %>
 <% end %>
 
+<br><br>
+
+<p>トップページに戻るのリンクをここに作る</p>
 <%= link_to "カフェ一覧に戻る", coffees_path %>
