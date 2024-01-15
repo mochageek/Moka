@@ -4,16 +4,16 @@ Rails.application.routes.draw do
   resources :users, only: [:show] # ユーザーマイページへのルーティング
  
   get 'coffees/tagall' => 'coffees#tagall'
+  get 'coffees/top' => 'coffees#top'
+  get 'coffees/ranking' => 'coffees#ranking'
 
   resources :coffees do
     resources :likes, only: [:create, :destroy]
-    resources :comments, only: [:create]
-    
+    resources :comments, only: [:create, :destroy]   
   end
-  
-  resources :users
-  
 
+  resources :images
+  resources :users  
 
- root 'coffees#index'
+  root 'coffees#index'
 end

@@ -1,0 +1,51 @@
+<html lang="ja"> 
+<head>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+</head>
+   <title></title>
+
+ <body>
+ <br><br><br><br><br>
+    <div class="slide">
+        <div class="slide-image"></div>
+        <div class="slide-image"></div>
+        <div class="slide-image"></div>
+    </div>
+
+   <div class="explain">
+      <div class="explain1">
+         <%= image_tag "popus.jpg", size: "270px" %>
+      </div>
+      <div class="explain2">
+         <%= image_tag "popus.jpg", size: "270px" %>
+      </div>
+   </div>
+
+   
+    
+
+    <div class="viewcontent">
+      <div class="vc">
+         <%= link_to coffees_ranking_path do %>
+            <%= image_tag "popus.jpg", size: "270px" %>
+         <% end %>
+      </div>
+      <div class="vc">
+         <%= link_to coffees_tagall_path do %>
+            <%= image_tag "favos.jpg", size: "270px" %>
+         <% end %>
+      </div>
+      <div class="vc">
+         <%= link_to coffees_tagall_path do %>
+            <%= image_tag "plas.jpg", size: "270px" %>
+         <% end %>
+      </div>
+      </div>
+    </div>
+    
+
+    <script src="js/5-12.js"></script>
+ </body>
+
+</html>

@@ -1,0 +1,93 @@
+.rranking{
+    margin: 15%;
+    margin-top: 0%;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Nixie+One);
+
+.ribbon {
+  font-family: 'Nixie One', cursive;
+  font-size: 30px;
+  text-shadow: 0 0 15px #fff;
+  width: 20%;
+    
+ position: relative;
+ background: #ffd7c8;
+ color: #fff;
+ text-align: center;
+ padding: 1em 2em; /* Adjust to suit */
+ margin: 2em auto 3em; /* Based on 24px vertical rhythm. 48px bottom margin - normally 24 but the ribbon 'graphics' take up 24px themselves so we double it. */
+}
+.ribbon:before, .ribbon:after {
+ content: "";
+ position: absolute;
+ display: block;
+ bottom: -1em;
+ border: 1.5em solid #e5a1a1;
+ z-index: -1;
+}
+.ribbon:before {
+ left: -2em;
+ border-right-width: 1.5em;
+ border-left-color: transparent;
+}
+.ribbon:after {
+ right: -2em;
+ border-left-width: 1.5em;
+ border-right-color: transparent;
+}
+.ribbon-content:before, .ribbon-content:after {
+ content: "";
+ position: absolute;
+ display: block;
+ border-style: solid;
+ border-color: #c67a7a transparent transparent transparent;
+ bottom: -1em;
+}
+.ribbon-content:before {
+ left: 0;
+ border-width: 1em 0 0 1em;
+}
+.ribbon-content:after {
+ right: 0;
+ border-width: 1em 1em 0 0;
+}
+
+.box8 {
+    width: 90%;
+    margin: 2em 0;
+    color: #232323;
+    background: #fff8e8;
+    border-left: solid 10px rgb(102,54,52);
+}
+
+.rthree{
+   display: flex;
+   align-items: center;
+   margin-bottom: 10%;
+}
+
+.rnumber{
+    font-size: 20px;
+    margin: 20px;
+}
+
+.rimage{
+    margin-right: 5%;
+}
+
+#rshop{
+    font-size: 30px;
+}
+
+#rarea{
+    font-size: 20px;
+}
+
+.rindextag{
+    font-size: 20px;
+}
+
+#rusername{
+    margin-right: 30%;
+}

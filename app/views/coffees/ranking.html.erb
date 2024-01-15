@@ -1,0 +1,84 @@
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>アプリの名前</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/index.css">
+  </head>
+
+<body>
+<br><br><br><br><br>
+<div class="coffees-container">
+
+      <h2 class="ribbon">
+      <span class="ribbon-content"> Like Ranking</span>
+      </h2>
+
+      
+      <div class="rranking">
+      
+        <% @rank_coffees.each.with_index(1) do |r,i| %>
+        
+            <div class="box8">
+            <div class="rthree">
+                <div class="rnumber"><%= i %></div>
+
+                <div class="rimage">
+                <% r.images.each_with_index do |image, index| %>
+                    <% if index < 1 %>
+                    <%= image_tag image.image_url, size: "370" %>
+                    <% index +=1 %>
+                    <% end %>
+                <% end %>
+                </div>
+
+                <div class="reachdetail">
+
+                    <div id="rshop">
+                        <%= link_to r.shop, coffee_path(r.id) %>
+                    </div>
+
+                    <div id="rarea">
+                        <%= r.area %>
+                    </div>
+
+                    <div class="rindextag">
+                        <% r.tags.each do |tag| %>
+                        <span><%= tag.name %></span>
+                        <% end %>
+                    </div>
+                    <br>
+
+                    <div id="rusername">
+                        by <%= r.user.username %>
+                    </div>
+                    <br>
+
+                    <div class="rlike">
+                        <% if user_signed_in? %>
+                            <% if current_user.already_liked?(r) %>
+                                <%= button_to coffee_like_path(id: r.id, coffee_id: r.id), method: :delete do %>
+                                    <i class="fas fa-heart fa-1.5x" style="color:#FFC0E0;"></i><%= r.likes.count %>
+                                <% end %>
+                            <% else %>
+                                <%= button_to coffee_likes_path(id: r.id, coffee_id: r.id), method: :post do %>
+                                    <i class="far fa-heart fa-1.5x" style="color:#FFC0E0;"></i><%= r.likes.count %>
+                                <% end %>
+                            <% end %>
+                        <% else %>
+                            <i class="far fa-heart fa-1.5x" style="color:#FFC0E0;"></i><%= r.likes.count %> 
+                        <% end %>
+                    </div>
+
+                </div>
+            </div>
+            </div>
+            <% end %>
+            </div>
+        </div>
+  </div>
+
+  </body>
+
+  </html>
+

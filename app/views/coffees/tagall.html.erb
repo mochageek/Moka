@@ -1,83 +1,77 @@
-<h1>MOCHAGEEK</h1>
-<h1>tagall</h1>
-
+<br><br><br><br><br><br>
+<body>
 <div class="coffees-container">
-
-  <% if user_signed_in? %>
-    <%= link_to "My Page", user_path(current_user.id) %>
-  <% end %>
-  
-  <br>
-
-  <%= link_to "新規投稿する", new_coffee_path %>
-
-  <h3>投稿を検索</h3>
-    <%= form_tag({controller:"coffees",action:"tagall"}, method: :get) do %>
-    <%= text_field_tag :search %>
-    <%= submit_tag '検索する'  %>
-  <% end %>
-
-  <%= form_tag({controller:"coffees",action:"tagall"}, method: :get) do %>
-    <% Tag.all.each do |t| %>
-        <li><%= check_box :tag_ids, t.name %><%= t.name %></li>
-    <% end %>
-    <%= submit_tag '検索' %>
- <% end %>
-
-
-  <h3>一覧ページ</h3>
-
-  <% @coffees.each do |t| %>
-
-    <br>
+    <div class="search">
+        <%= link_to "トップページに戻る", coffees_path %>
+   
+        フリーワードでさがす<br>
+        <%= form_tag({controller:"coffees",action:"tagall"}, method: :get) do %>
+            <%= text_field_tag :search %> 
+            <%= submit_tag '検索する'  %>
+        <% end %>
     
-    <div class="coffee">
-
-      <% if user_signed_in? %>
-        <%= link_to t.user.name, user_path(t.user.id) %>
-        <%= t.user.email %>
-      <% else %>
-        <%= link_to t.user.name, new_user_session_path %>
-        <%= t.user.email %>
-      <% end %>
-
-      <br>
-
-        <%= image_tag t.image_url, size: "250x200" if t.image? %>
-        <br>
-        <%= t.shop %>
-        <br>
-        <%= t.area %>
-
-      <% t.tags.each do |tag| %>
-        <span><%= tag.name %></span>
-      <% end %>
-
-      <% if user_signed_in? %>
-
-        <% if current_user.already_liked?(t) %>
-          <%= button_to coffee_like_path(id: t.id, coffee_id: t.id), method: :delete do %>
-            <p>❤を<br>取り消す</p><%= t.likes.count %>
-          <% end %>
-        <% else %>
-          <%= button_to coffee_likes_path(id: t.id, coffee_id: t.id), method: :post do %>
-            <p>❤いいね</p><%= t.likes.count %>
-          <% end %>
+        タグでさがす<br>
+        <%= form_tag({controller:"coffees",action:"tagall"}, method: :get) do %>
+            <% Tag.all.each do |t| %>
+                <li><%= check_box :tag_ids, t.name %><%= t.name %></li>
+            <% end %>
+            <%= submit_tag '検索する' %>
         <% end %>
-      
-      <% else %>
-        <p>❤いいね</p><%= t.likes.count %>
-      <% end %>
-
-      <%= link_to "詳細へ", coffee_path(t.id) %>
-        <% if user_signed_in? && current_user.id == t.user_id %>
-          <%= link_to "編集する", edit_coffee_path(t.id) %>
-          <%= button_to "削除する", coffee_path(t.id), method: :delete %>
-        <% end %>
-
     </div>
+   
 
-  <% end %>
+    <div class="searchpost">
+        <div class="searchlist"> 
+            <% @coffees.each do |t| %>
+            <br>
+
+                <div class="tagall">
+                    <div class="username">
+                        <%= t.user.username %>
+
+                    <div id="slike">
+                    <% if user_signed_in? %>
+                        <% if current_user.already_liked?(t) %>
+                            <%= button_to coffee_like_path(id: t.id, coffee_id: t.id), method: :delete do %>
+                                <i class="fas fa-heart fa-1.7x" style="color:#FFC0E0;"></i><%= t.likes.count %>
+                            <% end %>
+                    <% else %>
+                            <%= button_to coffee_likes_path(id: t.id, coffee_id: t.id), method: :post do %>
+                                <i class="far fa-heart fa-1.7x" style="color:#FFC0E0;"></i><%= t.likes.count %>
+                                <% end %>
+                            <% end %>
+                        <% else %>
+                            <i class="far fa-heart fa-1.7x" style="color:#FFC0E0;"></i><%= t.likes.count %>
+                    <% end %>
+                    </div>
+
+                    </div>
+
+                    <div class="image">
+                        <% t.images.each_with_index do |image, index| %>
+                            <% if index < 1 %>
+                                <%= image_tag image.image_url, size: "370" %>
+                                <% index +=1 %>
+                            <% end %>
+                        <% end %>
+                    </div>
+
+                    <div class="eachdetail">
+                        <%= link_to t.shop, coffee_path(t.id) %>
+                        <%= t.area %>
+
+                        <div class="indextag">
+                            <% t.tags.each do |tag| %>
+                                <span><%= tag.name %></span>
+                            <% end %>
+                        </div>                        
+                    </div>
+
+                </div>
+            <% end %>
+        </div>
+    </div>
+</body>
 
 
 

@@ -1,41 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
-  <head>
-    <title>アプリ名</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+<head>
+  <title>アプリ名</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
+  <script src="https://kit.fontawesome.com/f611854cc9.js" crossorigin="anonymous"></script> 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
 
-  </head>
+<body>
 
-  <body>
-
-  <header>
-
-    <h1>サイト作成中、、、</h1>
-    
-    <div class="header-list">
-
-      <ul>
-        <% if user_signed_in? %>
-          <%= button_to 'ログアウト', destroy_user_session_path, method: :delete %>
-        <% else %>
-          <%= link_to "新規登録", new_user_registration_path %>
-          <%= link_to "ログイン", new_user_session_path %>
-        <% end %>
+<header class="header">
+      <input type="checkbox" class="menu-btn" id="menu-btn">
+      <label for="menu-btn" class="menu-icon"><span class="navicon"></span></label>
+      <ul class="menu">
+        <li><%= link_to "Top", coffees_top_path %></li>
+        <li><%= link_to "My Page", user_path(current_user.id) %></li>
+        <li><%= link_to "Ranking", coffees_ranking_path %></li>
+        <li><%= link_to "Favorite", user_path(current_user.id) %></li>
+        <li><%= link_to "Search", coffees_tagall_path %></li>
       </ul>
 
-    </div>
-  
-  </header>
+      
+
+      <h1>Header.</h1>
+      <nav class="status">
+        <% if user_signed_in? %>
+            <%= link_to "Post new", new_coffee_path %>
+            <%= button_to 'Log out', destroy_user_session_path, method: :delete %>
+        <% else %>
+            <%= link_to "Sign up", new_user_registration_path %>
+            <%= link_to "Log in", new_user_session_path %>
+        <% end %>
+      </nav>
+
+</header>
 
   <main>
+    <div class="loading">
+      <div class="loading-wrap">
+        <i class="fa-solid fa-hand-holding-heart fa-4x fa-bounce"></i>
+      </div>
+    </div>
+    <script>
+      const loading = document.querySelector('.loading');
+      window.addEventListener('load', () => {
+        setTimeout(function() {
+          loading.classList.add('hide');
+        }, 1000);
+      });
+    </script>
     <%= yield %>
-  </main>
+      </main>
 
-  </body>
+<footer>
+  <small>©MochaWeb69</small>
+</footer>
+
+</body>
 
 </html>

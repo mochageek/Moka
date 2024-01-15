@@ -1,136 +1,138 @@
-<h1>MOCHAGEEK</h1>
-<h3>投稿カフェ詳細</h3>
+<br><br><br><br><br><br>
+<div class="coffees-container">
 
-<div class="coffee">
+    カフェ詳細 <%= link_to "トップページに戻る", coffees_path %>
 
-  <p><%= image_tag @coffee.image_url, size: "250x200" if @coffee.image? %></p>
-  <p><%= @coffee.shop %><p>
-  <p><%= @coffee.area %><p>
-  <p><%= @coffee.body %></p>
-  
-  <% @coffee.tags.each do |tag| %>
-    <span><%= tag.name %></span>
-  <% end %>
+    <div class="coffee">
+       <div class="showimage">
+            <% @coffee.images.each do |image| %>
+                <%= image_tag image.image_url, size: "300px" %>
+            <% end %>  
+        </div>
+        <div class="showlike">
+            <% if user_signed_in? %>
+                <% if current_user.already_liked?(@coffee) %>
+                    <%= button_to coffee_like_path(@coffee), method: :delete do %>
+                        <i class="fas fa-heart fa-1.5x" style="color:#FFC0E0;"></i><%= @coffee.likes.count %>
+                    <% end %>
+                <% else %>
+                    <%= button_to coffee_likes_path(@coffee), method: :post do %>
+                        <i class="far fa-heart fa-1.5x" style="color:#FFC0E0;"></i><%= @coffee.likes.count %>
+                    <% end %>
+                <% end %>
+            <% else %>
+                <i class="far fa-heart fa-1.5x" style="color:#FFC0E0;"></i><%= @coffee.likes.count %>
+            <% end %>
+        </div>
+        <div class="showdetails">
+            <p>店名
+            <%= @coffee.shop %><p>
+            <p>営業時間
+            <%= @coffee.open.strftime( "%H:%M" ) if @coffee.open? %>-<%= @coffee.close.strftime( "%H:%M" ) if @coffee.close? %><p>
+            <p>場所
+            <%= @coffee.area %><p>
+            <% @coffee.tags.each do |tag| %>
+                <span><%= tag.name %></span>
+            <% end %>
+            <p>備考<br><%= @coffee.body %><p>  
+            <h6><%= @coffee.created_at %></h6>
 
-  <h6><%= @coffee.created_at %></h6>
-      
-  <div id='map'></div>
+            <div class="comment-wrapper">
+                <h3>コメント一覧</h3> <!-- 他のコメントも見る> みたいなリンクつくる？-->
+            
+                <% @comments.each do |c| %>
 
-  <style>
-  #map {
-    height: 600px;
-    width: 100%;
-  }
-  </style>
-  
-  <!-- js部分 -->
-  <script>
-      function initMap() {
-  
-        //初期表示位置
-        let latlng = new google.maps.LatLng(38.60, 139.5);
-        //デザイン
-        let styles = [
-             {
-              stylers: [
-               { "saturation": 0 },
-               { "lightness": 0 }
-              ]
-             }
-            ];
-  
-        let map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 5.5,
-            styles: styles,
-            center: latlng
-        });
-        let transitLayer = new google.maps.TransitLayer();
-        transitLayer.setMap(map);
-  
-  //複数マーカー ここから
-       
-          ( function() { 
-            let markerLatLng = { lat: <%= @coffee.lat %>, lng: <%= @coffee.lng %> }; // 緯度経度のデータ作成
-            let marker = new google.maps.Marker({ 
-              position: markerLatLng, 
-              map: map 
+                    <div>
+                        <%= c.user.name unless c.user.blank? %>   
+                        <br>
+                        <div class="showcom">
+                            <%= c.content %>
+                            <% if user_signed_in? && c.user_id == current_user.id %>
+                                <%= button_to coffee_comment_path(id: c.id, coffee_id: c.id), method: :delete do %>
+                                    <i class="fa-brands fa-cc-visa"></i>
+                                <% end %>
+                            <% end %>
+                        </div>
+                    </div>
+                    <br>
+
+                <% end %>
+
+
+                <% if user_signed_in? %>
+                    <%= form_with(model: [@coffee, @comment], local: true) do |f| %>
+                        <%= f.text_area :content %>
+                        <%= button_tag type: "submit" do %>
+                            <i class="far fa-comments"></i> コメントする
+                        <% end %>
+                    <% end %>
+                <% end %>
+
+                <% if user_signed_in? && current_user.id == @coffee.user_id %>    
+                    <%= link_to "編集する", edit_coffee_path(@coffee.id) %>          
+                    <%= button_to "削除する", coffee_path(@coffee.id), method: :delete %>        
+                <% end %>
+
+                <br><br><br><br>
+            </div>
+        </div>
+    
+    <div id='map'></div>
+
+    <style>
+    </style>
+    
+    <!-- js部分 -->
+    <script>
+        function initMap() {
+    
+            //初期表示位置
+            let latlng = new google.maps.LatLng(38.60, 139.5);
+            //デザイン
+            let styles = [
+                {
+                stylers: [
+                { "saturation": 0 },
+                { "lightness": 0 }
+                ]
+                }
+                ];
+    
+            let map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 5.5,
+                styles: styles,
+                center: latlng
             });
-  //マーカーをクリックしたとき、詳細情報を表示
-            let infowindow = new google.maps.InfoWindow({
-              position: markerLatLng,
-              content: "<%= @coffee.body %>"
-            }); //ここで詳細ページへのリンクを表示させる
-            marker.addListener('click', function() {
-              infowindow.open(map, marker);
-            });
-  
-         })();
-       
-        //複数マーカー ここまで  
-    }
-  </script>
-  
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDTLQA9-fkeqZh4o9i-UWDfCAZP6_abs8&callback=initMap" async defer></script>
-  
-</div>
-
-  
-  <% if user_signed_in? %>
-
-      <% if current_user.already_liked?(@coffee) %>
-        <%= button_to coffee_like_path(@coffee), method: :delete do %>
-        <p>❤を<br>取り消す</p><%= @coffee.likes.count %>
-      <% end %>
-
-      <% else %>
-        <%= button_to coffee_likes_path(@coffee), method: :post do %>
-        <p>❤いいね</p><%= @coffee.likes.count %>
-        <% end %>
-      <% end %>
-
-  <% else %>
-
-      <p>❤いいね</p><%= @coffee.likes.count %>
-  
-  <% end %>
-
-
-</div>
-
-<br>
-
-<h3>いいねしたユーザー見れる必要あるかな</h3>
-
-  <% @coffee.liked_users.each do |user| %>
-      <li><%= user.name %></li>
-  <% end %>
-
-<br>
-
-<div class="comment-wrapper">
-
-  <h3>コメント一覧 他のコメントも見る> みたいなリンクつくる？</h3>
-  
-  <% @comments.each do |c| %>
-    <div>
-      <%= c.user.name unless c.user.blank? %>
-      <br>
-      <%= c.content %>
+            let transitLayer = new google.maps.TransitLayer();
+            transitLayer.setMap(map);
+    
+    //複数マーカー ここから
+        
+            ( function() { 
+                let markerLatLng = { lat: <%= @coffee.lat %>, lng: <%= @coffee.lng %> }; // 緯度経度のデータ作成
+                let marker = new google.maps.Marker({ 
+                position: markerLatLng, 
+                map: map 
+                });
+    //マーカーをクリックしたとき、詳細情報を表示
+                let infowindow = new google.maps.InfoWindow({
+                position: markerLatLng,
+                content: "<%= @coffee.body %>"
+                }); //ここで詳細ページへのリンクを表示させる
+                marker.addListener('click', function() {
+                infowindow.open(map, marker);
+                });
+    
+            })();
+        
+            //複数マーカー ここまで  
+        }
+    </script>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDTLQA9-fkeqZh4o9i-UWDfCAZP6_abs8&callback=initMap" async defer></script>
+    
     </div>
-      <br>
-  <% end %>
+    </div>
 
-  <% if user_signed_in? %>
-
-    <%= form_with(model: [@coffee, @comment], local: true) do |f| %>
-        <%= f.text_area :content %>
-        <%= button_tag type: "submit" do %>
-        <i class="far fa-comments"></i> コメントする
-    <% end %>
-
-  <% end %>
-  <% end %>
-
+    <br>
 </div>
-
-<%= link_to "トップページに戻る", coffees_path %>

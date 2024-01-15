@@ -1,31 +1,53 @@
+<br><br><br><br><br><br>
+<%= link_to "トップページに戻る", coffees_path %>
+<br>
 <h3>登録されているユーザー情報</h3>
-<p>NAME : <%= @user.name %></p>
-<p>EMAIL: <%= @user.email %></p>
-<p>PROFILE <br> <%= @user.profile %></p>
+
+<p>Name : <%= @user.name %></p>
+<p>User Name : <%= @user.username %></p>
+<p>Email: <%= @user.email %></p>
+<p>Profile <br> <%= @user.profile %></p>
 
 <% if current_user.id == @user.id %>
-  <%= link_to "編集する", edit_user_registration_path %>
+
+    <%= link_to "編集する", edit_user_registration_path %>
+
 <% end %>
 
-<br>
-<br>
+
+<br><br>
+
 
 <h3>いいねしたカフェ</h3>
-<h5>もっと見る＞</h5>
+<!-- もっと見るリンク＞-->
 
 <br>
 
 <h3>投稿したカフェ</h3>
-<h5>もっと見る＞</h5>
+
 <% @user.coffees.each do |t| %>
+
   <br>
+
   <%= t.user.name %>
+
   <%= t.shop %>
+  
   <%= t.area %>
+  
   <%= t.body %>
+
+  <% if user_signed_in? && current_user.id == t.user_id %>
+    
+      <%= link_to "編集する", edit_coffee_path(t.id) %>
+          
+      <%= button_to "削除する", coffee_path(t.id), method: :delete %>
+        
+  <% end %>
+
 <% end %>
 
-<br><br>
+<!-- 削除しても同じページに留まりたい-->
+        
 
-<p>トップページに戻るのリンクをここに作る</p>
-<%= link_to "カフェ一覧に戻る", coffees_path %>
+
